@@ -84,3 +84,6 @@ Endpoints iniciais:
 - `POST /auth/login`
 - `GET /products`
 - `GET /products/{id}`
+- `POST /products` (Admin)
+- `PUT /products/{id}` (Admin)
+- `DELETE /products/{id}` (Admin)

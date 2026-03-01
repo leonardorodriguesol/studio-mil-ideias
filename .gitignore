@@ -5,6 +5,8 @@
 # IDE
 .vs/
 .vscode/
+.idea/
+**/.idea/
 *.user
 *.suo
 

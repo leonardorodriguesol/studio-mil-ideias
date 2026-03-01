@@ -87,9 +87,24 @@ Endpoints iniciais:
 - `POST /products` (Admin)
 - `PUT /products/{id}` (Admin)
 - `DELETE /products/{id}` (Admin)
+- `GET /cart` (Auth)
+- `POST /cart/items` (Auth)
+- `DELETE /cart/items/{id}` (Auth)
+- `POST /checkout` (Auth)
+- `POST /webhook/stripe` (Webhook Stripe)
 
 ### Swagger + JWT
 
 - Acesse `/swagger` com a API rodando.
 - Gere um token em `POST /auth/login`.
 - Clique em `Authorize` e informe: `Bearer {seu_token}`.
+
+### Stripe (Checkout)
+
+- Configure em `appsettings.json`:
+  - `Stripe:SecretKey`
+  - `Stripe:WebhookSecret`
+  - `Stripe:Currency` (ex.: `brl`)
+- Fluxo:
+  - `POST /checkout` cria sessao de pagamento no Stripe.
+  - `POST /webhook/stripe` confirma pagamento e marca pedido como `Paid`.

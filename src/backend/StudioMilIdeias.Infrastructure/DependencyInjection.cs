@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using StudioMilIdeias.Application.Abstractions;
 using StudioMilIdeias.Infrastructure.Authentication;
+using StudioMilIdeias.Infrastructure.Payments;
 using StudioMilIdeias.Infrastructure.Persistence;
 
 namespace StudioMilIdeias.Infrastructure;
@@ -23,6 +24,7 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString));
         services.Configure<AdminSeedOptions>(configuration.GetSection(AdminSeedOptions.SectionName));
+        services.Configure<StripeOptions>(configuration.GetSection(StripeOptions.SectionName));
 
         var jwtOptions = new JwtOptions
         {
@@ -72,7 +74,10 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ICheckoutPaymentGateway, StripeCheckoutPaymentGateway>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();

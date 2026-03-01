@@ -47,7 +47,16 @@ studio-mil-ideias
 ## Proximos passos sugeridos
 
 1. Inicializar app Next.js em `src/frontend/studio-web`.
-2. Adicionar pipeline CI/CD (build e testes) no GitHub Actions.
+2. Expandir cobertura de testes automatizados (unitarios/integracao) para aumentar o valor da pipeline.
+
+## CI (GitHub Actions)
+
+- Workflow: `.github/workflows/backend-ci.yml`
+- Executa em `push`/`pull_request` para `main` (quando houver mudancas em `src/backend`):
+  - `dotnet restore`
+  - `dotnet build` (Release)
+  - `dotnet test`
+- Em `pull_request`, roda tambem `Dependency Review` para revisar riscos de dependencias.
 
 ## Backend setup atual
 

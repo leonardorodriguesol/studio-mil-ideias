@@ -24,6 +24,7 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString));
         services.Configure<AdminSeedOptions>(configuration.GetSection(AdminSeedOptions.SectionName));
+        services.Configure<DigitalDeliveryOptions>(configuration.GetSection(DigitalDeliveryOptions.SectionName));
         services.Configure<StripeOptions>(configuration.GetSection(StripeOptions.SectionName));
 
         var jwtOptions = new JwtOptions
@@ -77,6 +78,7 @@ public static class DependencyInjection
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ICheckoutPaymentGateway, StripeCheckoutPaymentGateway>();
+        services.AddScoped<IDigitalDownloadTokenService, DigitalDownloadTokenService>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();

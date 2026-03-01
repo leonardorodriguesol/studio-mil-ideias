@@ -101,6 +101,10 @@ Endpoints iniciais:
 - `DELETE /cart/items/{id}` (Auth)
 - `POST /checkout` (Auth)
 - `POST /webhook/stripe` (Webhook Stripe)
+- `GET /orders` (Auth)
+- `GET /orders/{id}` (Auth)
+- `GET /orders/{orderId}/items/{productId}/download-link` (Auth)
+- `GET /downloads/{token}` (Link temporario)
 
 ### Swagger + JWT
 
@@ -117,3 +121,13 @@ Endpoints iniciais:
 - Fluxo:
   - `POST /checkout` cria sessao de pagamento no Stripe.
   - `POST /webhook/stripe` confirma pagamento e marca pedido como `Paid`.
+
+### Entrega digital
+
+- Configure em `appsettings.json`:
+  - `DigitalDelivery:TokenSecret`
+  - `DigitalDelivery:TokenTtlMinutes`
+- Fluxo:
+  - Usuario autenticado solicita `GET /orders/{orderId}/items/{productId}/download-link`.
+  - API gera token temporario assinado.
+  - `GET /downloads/{token}` resolve o recurso digital apenas para pedido pago (retornando a URL do recurso).

@@ -2,6 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using StudioMilIdeias.Application.UseCases.Auth;
 using StudioMilIdeias.Application.UseCases.Cart;
 using StudioMilIdeias.Application.UseCases.Checkout;
+using StudioMilIdeias.Application.UseCases.Downloads;
+using StudioMilIdeias.Application.UseCases.Orders;
 using StudioMilIdeias.Application.UseCases.Products;
 
 namespace StudioMilIdeias.Application;
@@ -13,6 +15,8 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<ICheckoutService, CheckoutService>();
+        services.AddScoped<IDigitalDeliveryService, DigitalDeliveryService>();
+        services.AddScoped<IOrderQueries, OrderQueries>();
         services.AddScoped<IProductQueries, ProductQueries>();
         services.AddScoped<IProductManagementService, ProductManagementService>();
         return services;

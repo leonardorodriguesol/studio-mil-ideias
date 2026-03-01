@@ -13,6 +13,8 @@ Plataforma de e-commerce para produtos digitais.
 
 ```text
 studio-mil-ideias
+├── docker
+│   └── docker-compose.yml
 ├── docs
 ├── src
 │   ├── backend
@@ -45,7 +47,7 @@ studio-mil-ideias
 ## Proximos passos sugeridos
 
 1. Inicializar app Next.js em `src/frontend/studio-web`.
-2. Adicionar `docker-compose` para API + PostgreSQL.
+2. Adicionar pipeline CI/CD (build e testes) no GitHub Actions.
 
 ## Backend setup atual
 
@@ -62,9 +64,23 @@ studio-mil-ideias
 
 ### Rodar backend localmente
 
+1. Subir PostgreSQL com Docker:
+
+```bash
+docker compose -f docker/docker-compose.yml up -d
+```
+
+2. Iniciar a API:
+
 ```bash
 cd src/backend/StudioMilIdeias.Api
 dotnet run
 ```
 
 Health check disponivel em `GET /health`.
+
+Endpoints iniciais:
+- `POST /auth/register`
+- `POST /auth/login`
+- `GET /products`
+- `GET /products/{id}`

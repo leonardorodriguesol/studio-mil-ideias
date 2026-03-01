@@ -87,3 +87,9 @@ Endpoints iniciais:
 - `POST /products` (Admin)
 - `PUT /products/{id}` (Admin)
 - `DELETE /products/{id}` (Admin)
+
+### Swagger + JWT
+
+- Acesse `/swagger` com a API rodando.
+- Gere um token em `POST /auth/login`.
+- Clique em `Authorize` e informe: `Bearer {seu_token}`.

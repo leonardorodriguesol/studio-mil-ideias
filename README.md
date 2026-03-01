@@ -16,7 +16,11 @@ studio-mil-ideias
 ├── docs
 ├── src
 │   ├── backend
-│   │   └── .gitkeep
+│   │   ├── StudioMilIdeias.sln
+│   │   ├── StudioMilIdeias.Api
+│   │   ├── StudioMilIdeias.Application
+│   │   ├── StudioMilIdeias.Domain
+│   │   └── StudioMilIdeias.Infrastructure
 │   └── frontend
 │       └── .gitkeep
 └── README.md
@@ -40,10 +44,27 @@ studio-mil-ideias
 
 ## Proximos passos sugeridos
 
-1. Criar a solucao .NET em `src/backend` com os projetos:
-   - `StudioMilIdeias.Api`
-   - `StudioMilIdeias.Application`
-   - `StudioMilIdeias.Domain`
-   - `StudioMilIdeias.Infrastructure`
-2. Inicializar app Next.js em `src/frontend/studio-web`.
-3. Adicionar `docker-compose` para API + PostgreSQL.
+1. Inicializar app Next.js em `src/frontend/studio-web`.
+2. Adicionar `docker-compose` para API + PostgreSQL.
+
+## Backend setup atual
+
+- Solucao: `src/backend/StudioMilIdeias.sln`
+- Projetos:
+  - `StudioMilIdeias.Api` (ASP.NET Core Web API)
+  - `StudioMilIdeias.Application` (Class Library)
+  - `StudioMilIdeias.Domain` (Class Library)
+  - `StudioMilIdeias.Infrastructure` (Class Library)
+- Referencias entre camadas:
+  - `Application -> Domain`
+  - `Infrastructure -> Application + Domain`
+  - `Api -> Application + Infrastructure`
+
+### Rodar backend localmente
+
+```bash
+cd src/backend/StudioMilIdeias.Api
+dotnet run
+```
+
+Health check disponivel em `GET /health`.

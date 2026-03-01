@@ -1,0 +1,80 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using StudioMilIdeias.Application.Abstractions;
+using StudioMilIdeias.Infrastructure.Authentication;
+using StudioMilIdeias.Infrastructure.Persistence;
+
+namespace StudioMilIdeias.Infrastructure;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException(
+                "Connection string 'DefaultConnection' was not found.");
+
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(connectionString));
+
+        var jwtOptions = new JwtOptions
+        {
+            Issuer = configuration[$"{JwtOptions.SectionName}:Issuer"] ?? string.Empty,
+            Audience = configuration[$"{JwtOptions.SectionName}:Audience"] ?? string.Empty,
+            SecretKey = configuration[$"{JwtOptions.SectionName}:SecretKey"] ?? string.Empty,
+            ExpiresInMinutes = int.TryParse(
+                configuration[$"{JwtOptions.SectionName}:ExpiresInMinutes"],
+                out var expiresInMinutes)
+                ? expiresInMinutes
+                : 60
+        };
+
+        if (string.IsNullOrWhiteSpace(jwtOptions.Issuer)
+            || string.IsNullOrWhiteSpace(jwtOptions.Audience))
+        {
+            throw new InvalidOperationException("Jwt issuer and audience are required.");
+        }
+        if (string.IsNullOrWhiteSpace(jwtOptions.SecretKey))
+        {
+            throw new InvalidOperationException("Jwt:SecretKey configuration is required.");
+        }
+
+        services.Configure<JwtOptions>(options =>
+        {
+            options.Issuer = jwtOptions.Issuer;
+            options.Audience = jwtOptions.Audience;
+            options.SecretKey = jwtOptions.SecretKey;
+            options.ExpiresInMinutes = jwtOptions.ExpiresInMinutes;
+        });
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+                };
+            });
+
+        services.AddScoped<IApplicationDbContext>(provider =>
+            provider.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<ITokenProvider, TokenProvider>();
+
+        return services;
+    }
+}
